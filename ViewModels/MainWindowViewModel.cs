@@ -57,7 +57,7 @@ namespace OdroidPianoteq.ViewModels
         public MainWindowViewModel()
         {
             this.homeLocation = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            this.pianoteqLocation = Path.Combine(this.homeLocation, "Pianoteq/'Pianoteq 7'/arm-64bit/'Pianoteq 7'");
+            this.pianoteqLocation = Path.Combine(this.homeLocation, "Pianoteq/Pianoteq 7/arm-64bit/Pianoteq 7");
             this.xStartupLocation = Path.Combine(this.homeLocation, ".vnc", "xstartup");
             this.systemdSystemLocation = "/etc/systemd/system";
             this.logInformation = "";
@@ -111,6 +111,10 @@ namespace OdroidPianoteq.ViewModels
             }
         }
 
+        private string sanitizeFilename(string filename)
+        {
+            return filename.Replace(" ", "\\ ");
+        }
         private void ClearLog()
         {
             LogInformation = "";
@@ -201,7 +205,8 @@ namespace OdroidPianoteq.ViewModels
         {
             string directory = Path.GetDirectoryName(startsh_path) ?? "";
             Log($"Adding a start.sh script in the {directory} folder");
-            string startsh_contents = $"taskset -c 2,3,4,5 {pianoteqLocation} --fullscreen\n";
+            string pianoteqLocationEscaped = sanitizeFilename(pianoteqLocation);
+            string startsh_contents = $"taskset -c 2,3,4,5 {pianoteqLocationEscaped} --fullscreen\n";
             try
             {
                 if (directory != "")
@@ -232,8 +237,8 @@ namespace OdroidPianoteq.ViewModels
             string xstartup = @"#!/bin/sh
 xrdb $HOME/.Xresources
 xsetroot -solid grey
-export XKL_XMODMAP_DISABLE = 1
-export DBUS_SESSION_BUS_ADDRESS = `cat /proc/$(pidof -s mate-session)/environ | tr '\0' '\n' | grep DBUS_SESSION_BUS_ADDRESS | cut -d '=' -f2-`
+export XKL_XMODMAP_DISABLE=1
+export DBUS_SESSION_BUS_ADDRESS=`cat /proc/$(pidof -s mate-session)/environ | tr '\0' '\n' | grep DBUS_SESSION_BUS_ADDRESS | cut -d '=' -f2-`
 mate-session &
 export DISPLAY=:1
 systemctl --user stop pulseaudio.socket
