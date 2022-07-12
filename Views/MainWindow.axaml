@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:OdroidPianoteq.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="OdroidPianoteq.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Odroid Pianoteq Setup">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid 
+        ColumnDefinitions="2*,5*,*" 
+        RowDefinitions="40,40,40,40,*"  
+        Margin="4">
+                <Label VerticalAlignment="Center" Margin="4" FontSize="20"
+                        Grid.Row="0" Grid.Column="0">Unzipped arm-64bit executable</Label>
+                <Border Grid.Row = "0"
+                        Grid.Column = "1"
+                        Margin="4"
+                        Padding="10"
+                        Background="{DynamicResource ThemeAccentBrush}"
+                        ToolTip.Tip="The executable that starts pianoteq on odroid.">
+                        <TextBox Margin="4" Text="{Binding PianoteqLocation}"/>
+                </Border>
+                <Button Margin="4" Grid.Row="0" Grid.Column="2" Content="..." 
+                        Command="{Binding BrowseForPianoteqFile}"/>
+
+                <Label VerticalAlignment="Center" Margin="4" Grid.Row="1" FontSize="20"
+                        Grid.Column="0">vnc xstartup script</Label>
+                <Border Grid.Row = "1"
+                        Grid.Column = "1"
+                        Margin="4"
+                        Padding="10"
+                        Background="{DynamicResource ThemeAccentBrush}"
+                        ToolTip.Tip="This is the script that is executed when someone connects to odroid with a vnc viewer.">
+                        <TextBox Margin="4" Grid.Row="1" Grid.Column="1" Text="{Binding XStartupLocation}"/>
+                </Border>
+                <Button Margin="4" Grid.Row="1" Grid.Column="2" Content="..." 
+                        Command="{Binding BrowseForXStartupFolder}"/>
+
+                <Label VerticalAlignment="Center" Margin="4" Grid.Row="2" FontSize="20"
+                        Grid.Column="0">systemd service folder</Label>
+                <Border Grid.Row = "2"
+                        Grid.Column = "1"
+                        Margin="4"
+                        Padding="10"
+                        Background="{DynamicResource ThemeAccentBrush}"
+                        ToolTip.Tip="In this folder a new vnc service will be added.">
+                        <TextBox Margin="4" Grid.Row="2" Grid.Column="1" Text="{Binding SystemdSystemLocation}"/>
+                </Border>
+                <Button Margin="4" Grid.Row="2" Grid.Column="2" Content="..." 
+                        Command="{Binding BrowseForSystemdSystemFolder}"/>
+
+                <Button Margin="4" Grid.Row="3" Grid.Column="1" Content="Run Pianoteq Configuration!" Command="{Binding RunPianoteqConfiguration}"/>
+
+                <TextBox Margin="4" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" 
+                         AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding LogInformation}"/>
+
+    </Grid>
+
+</Window>
