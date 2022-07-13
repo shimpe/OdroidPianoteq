@@ -71,7 +71,7 @@ namespace OdroidPianoteq.ViewModels
             BrowseForSystemdSystemFolder = ReactiveCommand.CreateFromTask(SelectSystemdSystemFolderAsync);
             ShowSelectSystemdSystemFolderDialog = new Interaction<Unit, string?>();
 
-            RunPianoteqConfiguration = ReactiveCommand.Create(runPianoteqConfiguration);
+            RunPianoteqConfiguration = ReactiveCommand.CreateFromTask(runPianoteqConfigurationAsync);
 
             Log("System started.");
             Log("Before you continue, make sure you have installed and configured x11vnc server on the odroid with the commands");
@@ -139,7 +139,19 @@ namespace OdroidPianoteq.ViewModels
             }
             return "<Error: No network adapters with an IPv4 address in the system!>";
         }
-        private void runPianoteqConfiguration()
+
+        private async Task RunCmd(string cmd, string[] args)
+        {
+            try
+            {
+                await CommandLine.Run(cmd, args);
+            }
+            catch (Exception e)
+            {
+                Log(e.ToString());
+            }
+        }
+        private async Task runPianoteqConfigurationAsync()
         {
             ClearLog();
             Log("Start configuration task");
@@ -171,12 +183,20 @@ namespace OdroidPianoteq.ViewModels
                     Log("Setup finished.");
                     Log("");
                     Log("");
-                    Log("On the odroid reload the systemd services, and then start the vnc server service with the commands");
-                    Log("sudo systemctl daemon-reload");
-                    Log("sudo systemctl enable vncserver@1.service");
-                    Log("sudo systemctl restart vncserver@1");
-                    Log("Also make sure the xstartup script is executable with command");
+                    Log("Making sure the xstartup script is executable with command");
                     Log($"chmod +x {xStartupLocation}");
+                    await RunCmd("chmod", new string[] {"+x", $"{xStartupLocation}"});
+                    
+                    Log("I will now reload the systemd services, and then start the vnc server service (superuser priviliges required for this to work)");
+                    Log("(sudo) systemctl daemon-reload");
+                    await RunCmd("systemctl", new string[] {"daemon-reload"});
+
+                    Log("(sudo) systemctl enable vncserver@1.service");
+                    await RunCmd("systemctl", new string[] {"enable", "vncserver@1.service"});
+
+                    Log("(sudo) systemctl restart vncserver@1");
+                    await RunCmd("systemctl", new string[] {"restart", "vncserver@1"});
+
                     Log("");
                     Log("");
                     Log("On your tablet/phone/laptop make sure to install a vnc viewer (e.g. tightvnc or tigervnc).");
