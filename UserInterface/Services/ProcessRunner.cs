@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace OdroidPianoteq.Services
+namespace UserInterface.Services
 {
     public class ProcessRunner
     {

@@ -6,9 +6,9 @@ using System.Reactive.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using OdroidPianoteq.Services;
+using UserInterface.Services;
 
-namespace OdroidPianoteq.ViewModels
+namespace UserInterface.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {

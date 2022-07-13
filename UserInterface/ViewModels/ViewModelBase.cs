@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace OdroidPianoteq.ViewModels
+namespace UserInterface.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {

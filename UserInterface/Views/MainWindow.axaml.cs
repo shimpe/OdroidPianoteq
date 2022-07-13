@@ -7,10 +7,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using OdroidPianoteq.ViewModels;
+using UserInterface.ViewModels;
 using ReactiveUI;
 
-namespace OdroidPianoteq.Views
+namespace UserInterface.Views
 {
     public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {

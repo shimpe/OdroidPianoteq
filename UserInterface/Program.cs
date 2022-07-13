@@ -2,7 +2,7 @@
 using Avalonia.ReactiveUI;
 using System;
 
-namespace OdroidPianoteq
+namespace UserInterface
 {
     class Program
     {

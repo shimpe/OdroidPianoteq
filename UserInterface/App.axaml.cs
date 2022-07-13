@@ -1,10 +1,10 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using OdroidPianoteq.ViewModels;
-using OdroidPianoteq.Views;
+using UserInterface.ViewModels;
+using UserInterface.Views;
 
-namespace OdroidPianoteq
+namespace UserInterface
 {
     public partial class App : Application
     {

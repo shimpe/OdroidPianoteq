@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using OdroidPianoteq.ViewModels;
+using UserInterface.ViewModels;
 
-namespace OdroidPianoteq
+namespace UserInterface
 {
     public class ViewLocator : IDataTemplate
     {
