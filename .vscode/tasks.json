@@ -14,6 +14,24 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label" : "copy_after_build",
+            "command" : "cp",
+            "args": [
+                "${workspaceFolder}/SystemdServiceCreator/bin/Debug/net6.0/SystemdServiceCreator",
+                "${workspaceFolder}/SystemdServiceCreator/bin/Debug/net6.0/SystemdServiceCreator.dll",
+                "${workspaceFolder}/SystemdServiceCreator/bin/Debug/net6.0/SystemdServiceCreator.runtimeconfig.json",
+                "${workspaceFolder}/SystemdServiceCreator/bin/Debug/net6.0/SystemdServiceCreator.deps.json",
+                "${workspaceFolder}/SystemdServiceCreator/bin/Debug/net6.0/SystemdServiceCreator.pdb",
+                "${workspaceFolder}/UserInterface/bin/Debug/net6.0/",
+            ],
+
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn" : ["build"]
+        },
+        {
             "label": "publish",
             "command": "dotnet",
             "type": "process",
