@@ -77,6 +77,39 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "release build for odroid",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "-r",
+                "linux-arm64",
+                "-c",
+                "Release",
+                "--self-contained",
+                "true",
+                "-p:PublishTrimmed=true",
+                "-p:PublishSingleFile=true",
+                "-o",
+                "${workspaceFolder}/publish"
+            ],
+            "problemMatcher": "$msCompile"
+        },  
+        {
+            "label": "publish build for odroid",
+            "command": "tar",
+            "type": "process",
+            "args": [
+                "cvjf", 
+                "publish.bz2", 
+                "-C",
+                "${workspaceFolder}/publish",
+                "."
+            ],
+            "problemMatcher": "$msCompile",
+            "dependsOn" : [ "release build for odroid"],
+        },      
+        {
             "label": "watch",
             "command": "dotnet",
             "type": "process",
