@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using UserInterface.Services;
+using System.Linq;
 
 namespace UserInterface.ViewModels
 {
@@ -190,11 +191,16 @@ namespace UserInterface.ViewModels
                 else
                 {
                     Log($"Adding a vncservice for systemd in folder {systemdSystemLocation}");
+                    string userId = homeLocation.Split('/').AsQueryable().Last();
                     string execPath = AppDomain.CurrentDomain.BaseDirectory;
                     string fullCmd = Path.Join(execPath, "SystemdServiceCreator");
                     await RunCmdAsSuperUser(fullCmd, new string[] {homeLocation, systemdSystemLocation});
                     Log("");
                     Log("");
+                    Log("Making sure the start.sh script is executable with command");
+                    Log($"chmod +x {startsh_path}");
+                    await RunCmd("chmod", new string[] {"+x", $"{startsh_path}"});
+                    
                     Log("Making sure the xstartup script is executable with command");
                     Log($"chmod +x {xStartupLocation}");
                     await RunCmd("chmod", new string[] {"+x", $"{xStartupLocation}"});
@@ -270,13 +276,13 @@ namespace UserInterface.ViewModels
 xrdb $HOME/.Xresources
 xsetroot -solid grey
 export XKL_XMODMAP_DISABLE=1
-export DBUS_SESSION_BUS_ADDRESS=`cat /proc/$(pidof -s mate-session)/environ | tr '\0' '\n' | grep DBUS_SESSION_BUS_ADDRESS | cut -d '=' -f2-`
 mate-session &
+export DBUS_SESSION_BUS_ADDRESS=`cat /proc/$(pidof -s mate-session)/environ | tr '\0' '\n' | grep DBUS_SESSION_BUS_ADDRESS | cut -d '=' -f2-`
 export DISPLAY=:1
 systemctl --user stop pulseaudio.socket
 systemctl --user stop pulseaudio.service
 @STARTSH@ &
-            ".Replace("@STARTSH@", Path.Combine(startsh_path, "start.sh"));
+            ".Replace("@STARTSH@", startsh_path);
             try 
             {
                 Log($"Writing a new vnc xstartup script in {xStartupLocation}");
