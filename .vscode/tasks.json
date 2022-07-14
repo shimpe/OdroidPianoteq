@@ -2,11 +2,13 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build Release",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
+                "-c",
+                "Release",
                 "${workspaceFolder}",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
@@ -14,7 +16,38 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label" : "copy_after_build",
+            "label" : "copy_after_build Release",
+            "command" : "cp",
+            "args": [
+                "${workspaceFolder}/SystemdServiceCreator/bin/Release/net6.0/SystemdServiceCreator",
+                "${workspaceFolder}/SystemdServiceCreator/bin/Release/net6.0/SystemdServiceCreator.dll",
+                "${workspaceFolder}/SystemdServiceCreator/bin/Release/net6.0/SystemdServiceCreator.runtimeconfig.json",
+                "${workspaceFolder}/SystemdServiceCreator/bin/Release/net6.0/SystemdServiceCreator.deps.json",
+                "${workspaceFolder}/SystemdServiceCreator/bin/Release/net6.0/SystemdServiceCreator.pdb",
+                "${workspaceFolder}/UserInterface/bin/Release/net6.0/",
+            ],
+
+            "group": {
+                "kind": "build",
+            },
+            "dependsOn" : ["build Release"]
+        },
+        {
+            "label": "build Debug",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "-c",
+                "Debug",
+                "${workspaceFolder}",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label" : "copy_after_build Debug",
             "command" : "cp",
             "args": [
                 "${workspaceFolder}/SystemdServiceCreator/bin/Debug/net6.0/SystemdServiceCreator",
@@ -29,7 +62,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOn" : ["build"]
+            "dependsOn" : ["build Debug"]
         },
         {
             "label": "publish",
