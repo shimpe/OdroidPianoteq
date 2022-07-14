@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/SystemdServiceCreator/bin/Debug/net6.0/SystemdServiceCreator.dll",
+            "program": "${workspaceFolder}/UserInterface/bin/Debug/net6.0/UserInterface.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SystemdServiceCreator",
+            "cwd": "${workspaceFolder}/UserInterface",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
