@@ -151,6 +151,18 @@ namespace UserInterface.ViewModels
                 Log(e.ToString());
             }
         }
+
+        private async Task RunCmdAsSuperUser(string cmd, string[] args)
+        {
+            try
+            {
+                await CommandLine.RunAsSuperUser(cmd, args);
+            }
+            catch (Exception e)
+            {
+                Log(e.ToString());
+            }
+        }
         private async Task runPianoteqConfigurationAsync()
         {
             ClearLog();
@@ -163,8 +175,6 @@ namespace UserInterface.ViewModels
                 createStartShScript();
                 backupXStartupScript();
                 writeXStartupScript();
-                backupSystemdService();
-                addSystemdService();
             }
             catch (OperationCanceledException e)
             {
@@ -176,11 +186,13 @@ namespace UserInterface.ViewModels
                 if (somethingWentWrong)
                 {
                     Log("Please read the errors and correct the problem before retrying.");
-                    Log("Make sure you run this setup program with superuser privileges.");
                 }
                 else
                 {
-                    Log("Setup finished.");
+                    Log($"Adding a vncservice for systemd in folder {systemdSystemLocation}");
+                    string execPath = AppDomain.CurrentDomain.BaseDirectory;
+                    string fullCmd = Path.Join(execPath, "SystemdServiceCreator");
+                    await RunCmdAsSuperUser(fullCmd, new string[] {homeLocation, systemdSystemLocation});
                     Log("");
                     Log("");
                     Log("Making sure the xstartup script is executable with command");
@@ -271,52 +283,6 @@ systemctl --user stop pulseaudio.service
                 File.WriteAllText(xStartupLocation, xstartup);
             }
             catch (Exception e)
-            {
-                throw new OperationCanceledException(e.ToString());
-            }
-        }
-
-        private void backupSystemdService()
-        {
-            var serviceLocation = Path.Combine(systemdSystemLocation, "vncserver@.service");
-            Log($"Create backup of systemd service script {serviceLocation}");
-            string extralog = "";
-            string error = FileBackup.Backup(ref extralog, serviceLocation, ".bak");
-            if (extralog != "")
-                Log(extralog);
-            if (error != "")
-            {
-                throw new OperationCanceledException(error);
-            }
-        }
-
-        private void addSystemdService()
-        {
-            string serviceTxt = @"[Unit]
-Description=Start VNC server at startup
-After=syslog.target network.target
-
-[Service]
-Type=forking
-User=@USER@
-Group=@USER@
-WorkingDirectory=@HOME@
-
-PIDFile=@HOME@/.vnc/%H:%i.pid
-ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
-ExecStart=/usr/bin/vncserver -depth 24 -geometry 1024x768 :%i
-ExecStop=/usr/bin/vncserver -kill :%i
-
-[Install]
-WantedBy=multi-user.target
-                        ".Replace("@USER@", Path.GetFileName(homeLocation)).Replace("@HOME@", homeLocation);
-            try
-            {
-                string systemdServiceName = Path.Combine(systemdSystemLocation, "vncserver@.service");
-                Log($"Writing a new vnc xstartup script in {systemdServiceName}");
-                File.WriteAllText(systemdServiceName, serviceTxt);
-            }
-            catch (System.Exception e)
             {
                 throw new OperationCanceledException(e.ToString());
             }

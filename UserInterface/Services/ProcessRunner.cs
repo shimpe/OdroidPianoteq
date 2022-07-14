@@ -40,5 +40,35 @@ namespace UserInterface.Services
                     "");
             }
         }
+
+        public async Task RunAsSuperUserAsync(string fileName, params string[] args)
+        {
+            using var process = new Process();
+            process.StartInfo.FileName = fileName;
+            process.StartInfo.WorkingDirectory = _workingDirectory;
+            foreach (var arg in args) process.StartInfo.ArgumentList.Add(arg);
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.Verb = "runas";
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.CreateNoWindow = false;
+            process.Start();
+            var outputTask = Task.Run(() => process.StandardOutput.ReadToEnd());
+            var errorTask = Task.Run(() => process.StandardError.ReadToEnd());
+            await process.WaitForExitAsync();
+            var outputs = await Task.WhenAll(outputTask, errorTask);
+
+            if (process.ExitCode != 0 || !string.IsNullOrWhiteSpace(outputs[1]))
+            {
+                throw new Exception(
+                    $"Program '{fileName} {string.Join(" ", args)}' exited with exit code:{process.ExitCode}." +
+                    Environment.NewLine +
+                    outputs[0] + Environment.NewLine +
+                    outputs[1] + Environment.NewLine +
+                    "");
+            }
+        }
+ 
     }
 }

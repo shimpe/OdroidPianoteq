@@ -13,5 +13,12 @@ namespace UserInterface.Services
             ProcessRunner pr = new ProcessRunner();
             await pr.RunAsync(Cmd, Args);
         }
+
+        public async static Task RunAsSuperUser(string Cmd, string[] Args)
+        {
+            string execPath = AppDomain.CurrentDomain.BaseDirectory;
+            ProcessRunner pr = new ProcessRunner(execPath);
+            await pr.RunAsSuperUserAsync(Cmd, Args);
+        }
     }
 }
