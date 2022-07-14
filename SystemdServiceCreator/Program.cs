@@ -43,15 +43,17 @@ namespace MyApp // Note: actual namespace depends on the project name.
     {
         static void Main(string[] args)
         {
-            if (args.Count() < 2)
+            if (args.Count() < 3)
             {
-                Console.WriteLine("Error! Program needs two arguments: 1. home location 2. /etc/systemd/system location ");
+                Console.WriteLine("Error! Program needs three arguments: 1. user id 2. home location 3. /etc/systemd/system location ");
                 Console.WriteLine($"Currently provided args = {String.Join("\n", args)}");
                 return;
             }
-            string homeLocation = args[0];
+            string userid = args[0];
+            Console.WriteLine($"user id = {userid}");
+            string homeLocation = args[1];
             Console.WriteLine($"home location = {homeLocation}");
-            string systemdSystemLocation = args[1];
+            string systemdSystemLocation = args[2];
             Console.WriteLine($"/etc/systemd/system location = {systemdSystemLocation}");
             var serviceLocation = Path.Combine(systemdSystemLocation, "vncserver@.service");
             string extralog = "";
@@ -73,14 +75,17 @@ User=@USER@
 Group=@USER@
 WorkingDirectory=@HOME@
 
-PIDFile=@HOME@/.vnc/%H:%i.pid
+PIDFile=@VNCPID@
 ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
 ExecStart=/usr/bin/vncserver -depth 24 -geometry 1024x768 :%i
 ExecStop=/usr/bin/vncserver -kill :%i
 
 [Install]
 WantedBy=multi-user.target
-                        ".Replace("@USER@", Path.GetFileName(homeLocation)).Replace("@HOME@", homeLocation);
+"
+                         .Replace("@USER@", Path.GetFileName(userid))
+                         .Replace("@HOME@", homeLocation)
+                         .Replace("@VNCPID@", Path.Join(homeLocation, ".vnc/%H:%i.pid"));
             try
             {
                 string systemdServiceName = Path.Combine(systemdSystemLocation, "vncserver@.service");
