@@ -43,8 +43,16 @@ namespace MyApp // Note: actual namespace depends on the project name.
     {
         static void Main(string[] args)
         {
-            string homeLocation = args[1];
-            string systemdSystemLocation = args[2];
+            if (args.Count() < 2)
+            {
+                Console.WriteLine("Error! Program needs two arguments: 1. home location 2. /etc/systemd/system location ");
+                Console.WriteLine($"Currently provided args = {String.Join("\n", args)}");
+                return;
+            }
+            string homeLocation = args[0];
+            Console.WriteLine($"home location = {homeLocation}");
+            string systemdSystemLocation = args[1];
+            Console.WriteLine($"/etc/systemd/system location = {systemdSystemLocation}");
             var serviceLocation = Path.Combine(systemdSystemLocation, "vncserver@.service");
             string extralog = "";
             string error = FileBackup.Backup(ref extralog, serviceLocation, ".bak");
