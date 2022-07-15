@@ -44,6 +44,13 @@ namespace UserInterface.ViewModels
             set => this.RaiseAndSetIfChanged(ref logInformation, value);
         }
 
+        private bool? toggleAdvanced = false;
+        public bool ToggleAdvanced
+        {
+            get => toggleAdvanced ?? false;
+            set => this.RaiseAndSetIfChanged(ref toggleAdvanced, value);
+        }
+
         public Interaction<Unit, string?> ShowSelectPianoteqFileDialog { get; }
         public ReactiveCommand<Unit, Unit> BrowseForPianoteqFile { get; }
 
@@ -54,6 +61,7 @@ namespace UserInterface.ViewModels
         public ReactiveCommand<Unit, Unit> BrowseForSystemdSystemFolder { get; }
 
         public ReactiveCommand<Unit, Unit> RunPianoteqConfiguration { get; }
+        public ReactiveCommand<Unit, Unit> ToggleAdvancedSettings{ get; }
 
         public MainWindowViewModel()
         {
@@ -73,10 +81,11 @@ namespace UserInterface.ViewModels
             ShowSelectSystemdSystemFolderDialog = new Interaction<Unit, string?>();
 
             RunPianoteqConfiguration = ReactiveCommand.CreateFromTask(runPianoteqConfigurationAsync);
+            ToggleAdvancedSettings = ReactiveCommand.Create(toggleAdvancedSettings);
 
             Log("System started.");
-            Log("Before you continue, make sure you have installed and configured x11vnc server on the odroid with the commands");
-            Log("sudo apt install x11vnc");
+            Log("Before you continue, make sure you have installed and configured tightvncserver on the odroid with the commands");
+            Log("sudo apt install tightvncserver");
             Log("vncpasswd");
             Log("");
         }
@@ -292,6 +301,11 @@ systemctl --user stop pulseaudio.service
             {
                 throw new OperationCanceledException(e.ToString());
             }
+        }
+
+        private void toggleAdvancedSettings()
+        {
+            ToggleAdvanced = !(toggleAdvanced ?? true);
         }
     }
 }

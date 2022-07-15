@@ -30,32 +30,36 @@
                         Command="{Binding BrowseForPianoteqFile}"/>
 
                 <Label VerticalAlignment="Center" Margin="4" Grid.Row="1" FontSize="20"
-                        Grid.Column="0">vnc xstartup script</Label>
+                        Grid.Column="0" IsVisible="{Binding ToggleAdvanced}">vnc xstartup script</Label>
                 <Border Grid.Row = "1"
                         Grid.Column = "1"
                         Margin="4"
                         Padding="10"
                         Background="{DynamicResource ThemeAccentBrush}"
-                        ToolTip.Tip="This is the script that is executed when someone connects to odroid with a vnc viewer.">
-                        <TextBox Margin="4" Grid.Row="1" Grid.Column="1" Text="{Binding XStartupLocation}"/>
+                        ToolTip.Tip="This is the script that is executed when someone connects to odroid with a vnc viewer." IsVisible="{Binding ToggleAdvanced}">
+                        <TextBox Margin="4" Grid.Row="1" Grid.Column="1" Text="{Binding XStartupLocation}" IsVisible="{Binding ToggleAdvanced}"/>
                 </Border>
                 <Button Margin="4" Grid.Row="1" Grid.Column="2" Content="..." 
-                        Command="{Binding BrowseForXStartupFolder}"/>
+                        Command="{Binding BrowseForXStartupFolder}" IsVisible="{Binding ToggleAdvanced}"/>
 
                 <Label VerticalAlignment="Center" Margin="4" Grid.Row="2" FontSize="20"
-                        Grid.Column="0">systemd service folder</Label>
+                        Grid.Column="0" IsVisible="{Binding ToggleAdvanced}">systemd service folder</Label>
                 <Border Grid.Row = "2"
                         Grid.Column = "1"
                         Margin="4"
                         Padding="10"
                         Background="{DynamicResource ThemeAccentBrush}"
-                        ToolTip.Tip="In this folder a new vnc service will be added.">
-                        <TextBox Margin="4" Grid.Row="2" Grid.Column="1" Text="{Binding SystemdSystemLocation}"/>
+                        ToolTip.Tip="In this folder a new vnc service will be added." IsVisible="{Binding ToggleAdvanced}">
+                        <TextBox Margin="4" Grid.Row="2" Grid.Column="1" 
+                                 Text="{Binding SystemdSystemLocation}" IsVisible="{Binding ToggleAdvanced}"/>
                 </Border>
                 <Button Margin="4" Grid.Row="2" Grid.Column="2" Content="..." 
-                        Command="{Binding BrowseForSystemdSystemFolder}"/>
+                        Command="{Binding BrowseForSystemdSystemFolder}" IsVisible="{Binding ToggleAdvanced}"/>
 
-                <Button Margin="4" Grid.Row="3" Grid.Column="1" Content="Run Pianoteq Configuration!" Command="{Binding RunPianoteqConfiguration}"/>
+                <StackPanel Spacing="4" Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                        <Button Margin="4" Content="Run Pianoteq Configuration!" Command="{Binding RunPianoteqConfiguration}"/>
+                        <Button Margin="4" Content="Toggle Advanced Configuration!" Command="{Binding ToggleAdvancedSettings}"/>
+                </StackPanel>
 
                 <TextBox Margin="4" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" 
                          AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding LogInformation}"/>
