@@ -66,7 +66,7 @@ namespace UserInterface.ViewModels
         public MainWindowViewModel()
         {
             this.homeLocation = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            this.pianoteqLocation = Path.Combine(this.homeLocation, "Pianoteq/Pianoteq 7/arm-64bit/Pianoteq 7");
+            this.pianoteqLocation = Path.Combine(this.homeLocation, "Pianoteq/Pianoteq 8/arm-64bit/Pianoteq 8");
             this.xStartupLocation = Path.Combine(this.homeLocation, ".vnc", "xstartup");
             this.systemdSystemLocation = "/etc/systemd/system";
             this.logInformation = "";
